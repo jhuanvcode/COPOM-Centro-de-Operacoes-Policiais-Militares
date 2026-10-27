@@ -364,7 +364,7 @@ npm -v
 Clone o repositório:
 
 ```bash
-git clone https://github.com/jhuanvcode/COPOM-Centro-de-Opera-es-Policiais-Militares
+git clone https://github.com/jhuanvcode/COPOM-Centro-de-Operacoes-Policiais-Militares
 ```
 
 Entre na pasta do projeto:
