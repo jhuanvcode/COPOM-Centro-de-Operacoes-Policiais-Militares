@@ -1,0 +1,1028 @@
+/* ==========================================================================
+   COPOM 190 | TACTICAL COMMAND & CONTROL DISPATCH CONSOLE
+   Theme: Cult UI High-End Tactile & Machined Metal Interface
+   Light Physics: Directional Top Specular Highlights & Ambient Occlusion
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Surface & Titanium Palette */
+  --bg-deep: #07080b;
+  --bg-main: #0c0d12;
+  --bg-surface: #12141c;
+  --bg-surface-elevated: #181a24;
+  --bg-surface-card: #151722;
+  --bg-surface-hover: #1f2230;
+
+  /* Specular & Borders */
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-specular: rgba(255, 255, 255, 0.14);
+  --border-highlight: rgba(255, 255, 255, 0.22);
+  --bevel-light: rgba(255, 255, 255, 0.12);
+  --bevel-dark: rgba(0, 0, 0, 0.7);
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-dark: #0f172a;
+
+  /* Tactical Accents */
+  --tactical-blue: #38bdf8;
+  --tactical-cyan: #06b6d4;
+  --tactical-emerald: #10b981;
+  --tactical-emerald-glow: rgba(16, 185, 129, 0.35);
+  --tactical-amber: #f59e0b;
+  --tactical-red: #ef4444;
+  --tactical-red-glow: rgba(239, 68, 68, 0.4);
+  --tactical-purple: #818cf8;
+
+  /* Shadows */
+  --shadow-slab: inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+                 0 2px 4px rgba(0, 0, 0, 0.4),
+                 0 16px 36px -6px rgba(0, 0, 0, 0.7);
+  --shadow-recessed: inset 0 2px 4px rgba(0, 0, 0, 0.7),
+                     inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+/* ==========================================================================
+   Reset & Base Layout
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Organic Grain / Noise Overlay (Cult UI Pattern) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Overhead Tactical Command Spotlight */
+body::after {
+  content: "";
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1200px;
+  height: 550px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(56, 189, 248, 0.07) 0%, rgba(16, 185, 129, 0.02) 40%, transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 28px 48px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Header: Tactical Command Bar
+   ========================================================================== */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.25), transparent);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #2a2e3d 0%, #171922 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+              inset 0 -1px 0 0 rgba(0, 0, 0, 0.8),
+              0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.brand-icon-wrapper svg {
+  width: 24px;
+  height: 24px;
+  fill: #38bdf8;
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5));
+}
+
+.brand-title {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-pill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 2px 7px;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.brand-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Audio Switch: Aerospace Hardware Toggle */
+.tactical-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  background: rgba(18, 20, 28, 0.7);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.15s ease;
+}
+
+.tactical-toggle:hover {
+  border-color: var(--border-specular);
+  color: #fff;
+}
+
+.tactical-switch {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  background: #090a0d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.tactical-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #d4d4d8 0%, #71717a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+}
+
+#toggle-audio:checked + .tactical-switch {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+#toggle-audio:checked + .tactical-switch .tactical-switch-thumb {
+  transform: translateX(14px);
+  background: linear-gradient(180deg, #6ee7b7 0%, #10b981 100%);
+  border-color: #a7f3d0;
+  box-shadow: 0 0 6px var(--tactical-emerald-glow);
+}
+
+/* Status Beacon */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(180deg, #181c25 0%, #10121a 100%);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #34d399;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+              0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.status-dot-pulse {
+  position: relative;
+  width: 8px;
+  height: 8px;
+}
+
+.status-dot {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: var(--tactical-emerald);
+  box-shadow: 0 0 8px var(--tactical-emerald);
+}
+
+.status-dot-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--tactical-emerald);
+  animation: radarPing 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes radarPing {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  80%, 100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* ==========================================================================
+   Cult UI: Tactile Cards (Engineered Slabs)
+   ========================================================================== */
+
+.tactile-slab {
+  position: relative;
+  background: var(--bg-surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  box-shadow: var(--shadow-slab);
+  overflow: hidden;
+}
+
+/* Specular Hairline Rim (Top directional light) */
+.tactile-slab::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-highlight), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   KPI Stats Grid (Replacing 4px generic colored bar with Machined Telemetry)
+   ========================================================================== */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  padding: 18px 20px;
+  background: linear-gradient(180deg, #151824 0%, #11131c 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stat-micro-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.stat-body {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.stat-telemetry-led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+}
+
+/* Severity-specific stat styles */
+.stat-card.danger {
+  border-color: rgba(239, 68, 68, 0.2);
+}
+.stat-card.danger .stat-value {
+  color: #f87171;
+  text-shadow: 0 0 16px rgba(239, 68, 68, 0.3);
+}
+.stat-card.danger .stat-telemetry-led {
+  background: var(--tactical-red);
+  box-shadow: 0 0 10px var(--tactical-red-glow);
+  animation: pulseLed 1.8s infinite;
+}
+
+.stat-card.warning .stat-value {
+  color: #fbbf24;
+}
+.stat-card.warning .stat-telemetry-led {
+  background: var(--tactical-amber);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
+}
+
+.stat-card.success .stat-value {
+  color: #34d399;
+}
+.stat-card.success .stat-telemetry-led {
+  background: var(--tactical-emerald);
+  box-shadow: 0 0 8px var(--tactical-emerald-glow);
+}
+
+@keyframes pulseLed {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* ==========================================================================
+   Cult UI: Metal Button System
+   Full skeuomorphic light physics, brushed gradients, specular rim, click travel
+   ========================================================================== */
+
+.btn-metal {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Specular Crest Highlight Line (Cult UI Signature) */
+.btn-metal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8px;
+  right: 8px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  pointer-events: none;
+}
+
+/* Tactile Micro-Grain Stipple Overlay */
+.btn-metal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 0);
+  background-size: 3px 3px;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Active Pressed Travel (Mechanical Depression) */
+.btn-metal:active {
+  transform: translateY(1.5px);
+}
+
+/* --- Variant 1: Titanium / Dark Chrome (Benchmark Master) --- */
+.btn-metal-titanium {
+  background: linear-gradient(180deg, #2e3240 0%, #1e202c 50%, #13141c 100%);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+              inset 0 -1px 0 0 rgba(0, 0, 0, 0.8),
+              0 2px 6px rgba(0, 0, 0, 0.5),
+              0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.btn-metal-titanium:hover {
+  background: linear-gradient(180deg, #373c4d 0%, #252838 50%, #171924 100%);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+              inset 0 -1px 0 0 rgba(0, 0, 0, 0.8),
+              0 2px 8px rgba(0, 0, 0, 0.6),
+              0 0 16px rgba(129, 140, 248, 0.2);
+}
+
+.btn-metal-titanium:active {
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9),
+              inset 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+/* --- Variant 2: Cold Brushed Steel (Generate Payload) --- */
+.btn-metal-steel {
+  background: linear-gradient(180deg, #272a36 0%, #1a1c24 50%, #121319 100%);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+              inset 0 -1px 0 0 rgba(0, 0, 0, 0.8),
+              0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.btn-metal-steel:hover {
+  background: linear-gradient(180deg, #313544 0%, #21242e 50%, #161820 100%);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.btn-metal-steel:active {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.85);
+}
+
+/* --- Variant 3: Tactical Dispatch Green (Table Action Trigger) --- */
+.btn-metal-dispatch {
+  background: linear-gradient(180deg, #1b382b 0%, #12281e 50%, #0a1a13 100%);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 5px 12px;
+  border-radius: 6px;
+  box-shadow: inset 0 1px 0 0 rgba(110, 231, 183, 0.3),
+              inset 0 -1px 0 0 rgba(0, 0, 0, 0.8),
+              0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.btn-metal-dispatch::before {
+  background: linear-gradient(90deg, transparent, rgba(167, 243, 208, 0.4), transparent);
+}
+
+.btn-metal-dispatch:hover {
+  background: linear-gradient(180deg, #224737 0%, #173327 50%, #0e241a 100%);
+  border-color: rgba(16, 185, 129, 0.7);
+  color: #a7f3d0;
+  box-shadow: inset 0 1px 0 0 rgba(167, 243, 208, 0.4),
+              inset 0 -1px 0 0 rgba(0, 0, 0, 0.8),
+              0 0 12px rgba(16, 185, 129, 0.35);
+}
+
+.btn-metal-dispatch:active {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* ==========================================================================
+   Cult UI: Tactile Toggle Deck (Criteria Buttons)
+   Physical switchboard aesthetic with recessed bed & illuminated LEDs
+   ========================================================================== */
+
+.controls-card {
+  padding: 22px 24px;
+  margin-bottom: 24px;
+}
+
+.controls-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.controls-section-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.criterios-deck {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  background: #090a0f;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: var(--shadow-recessed);
+  margin-bottom: 20px;
+}
+
+/* Individual Hardware Toggle Chip */
+.btn-criterio {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: linear-gradient(180deg, #181b24 0%, #11131a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+              0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: all 0.15s ease;
+}
+
+.btn-criterio::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 6px;
+  right: 6px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  pointer-events: none;
+}
+
+.btn-criterio:hover {
+  background: linear-gradient(180deg, #222634 0%, #161822 100%);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.btn-criterio:active {
+  transform: translateY(1px);
+}
+
+/* Active State: Mechanically Engaged & Illuminated LED */
+.btn-criterio.active {
+  background: linear-gradient(180deg, #172635 0%, #0d1924 100%);
+  border-color: rgba(56, 189, 248, 0.6);
+  color: #38bdf8;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8),
+              inset 0 0 1px rgba(255, 255, 255, 0.1),
+              0 0 14px rgba(56, 189, 248, 0.25);
+}
+
+.btn-criterio.active::before {
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.6), transparent);
+}
+
+/* Specialized Hazard Ruby Button (Risco Operacional) */
+.btn-criterio.btn-risco {
+  border-color: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+}
+
+.btn-criterio.btn-risco:hover {
+  background: linear-gradient(180deg, #2d181e 0%, #1d0f13 100%);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.btn-criterio.btn-risco.active {
+  background: linear-gradient(180deg, #3b141a 0%, #260a0f 100%);
+  border-color: rgba(239, 68, 68, 0.8);
+  color: #fca5a5;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8),
+              0 0 16px rgba(239, 68, 68, 0.35);
+}
+
+.btn-criterio.btn-risco.active::before {
+  background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.7), transparent);
+}
+
+/* ==========================================================================
+   Tactile Inputs, Recessed Selects & Telemetry Badges
+   ========================================================================== */
+
+.controls-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.tool-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tool-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Hardware Recessed Inputs */
+.input-styled, .select-styled {
+  background: #090a0f;
+  border: 1px solid var(--border-subtle);
+  color: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  outline: none;
+  box-shadow: var(--shadow-recessed);
+  transition: all 0.15s ease;
+}
+
+.input-styled:focus, .select-styled:focus {
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: var(--shadow-recessed), 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+.select-styled {
+  cursor: pointer;
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  appearance: none;
+}
+
+/* Machined Telemetry Timer Badge */
+.badge-timer {
+  background: linear-gradient(180deg, #121824 0%, #0c1018 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+              0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   Filter & Search Bar Slab
+   ========================================================================== */
+
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Main Grid & Panels
+   ========================================================================== */
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 1100px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel-card {
+  padding: 22px 24px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.panel-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Tactical Dispatch Table (Skeuomorphic Table Slabs)
+   ========================================================================== */
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: #0a0b10;
+  box-shadow: var(--shadow-recessed);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+thead th {
+  background: linear-gradient(180deg, #181b24 0%, #11131a 100%);
+  color: #a1a1aa;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-specular);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 13px;
+  transition: background 0.15s ease;
+}
+
+tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ==========================================================================
+   Cult UI: Machined Status Badges
+   Beveled hardware labels with physical micro-LED dots
+   ========================================================================== */
+
+.badge-machined {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12),
+              0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* Severity: Critical */
+.badge-critico {
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.2) 0%, rgba(153, 27, 27, 0.25) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+}
+.badge-critico .badge-dot {
+  background: #ef4444;
+  box-shadow: 0 0 6px var(--tactical-red);
+}
+
+/* Severity: Medium */
+.badge-medio {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.18) 0%, rgba(180, 83, 9, 0.22) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: #fde68a;
+}
+.badge-medio .badge-dot {
+  background: #f59e0b;
+  box-shadow: 0 0 6px var(--tactical-amber);
+}
+
+/* Severity: Low */
+.badge-baixo {
+  background: linear-gradient(180deg, rgba(6, 182, 212, 0.15) 0%, rgba(14, 116, 144, 0.2) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  color: #a5f3fc;
+}
+.badge-baixo .badge-dot {
+  background: #06b6d4;
+  box-shadow: 0 0 6px var(--tactical-cyan);
+}
+
+/* Severity: OK / Valid */
+.badge-ok {
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.18) 0%, rgba(6, 95, 70, 0.22) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #a7f3d0;
+}
+.badge-ok .badge-dot {
+  background: #10b981;
+  box-shadow: 0 0 6px var(--tactical-emerald);
+}
+
+/* ==========================================================================
+   Canvas Visualizer & CRT Frame
+   ========================================================================== */
+
+.chart-wrapper {
+  position: relative;
+  background: #08090d;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  padding: 12px;
+  box-shadow: var(--shadow-recessed);
+}
+
+#canvas-grafico {
+  width: 100%;
+  height: 200px;
+  display: block;
+}
+
+/* ==========================================================================
+   Dispatch Telemetry Log (Real-time Feed)
+   ========================================================================== */
+
+.dispatch-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 12px;
+  transition: background 0.15s ease;
+}
+
+.dispatch-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dispatch-item:last-child {
+  border-bottom: none;
+}
+
+/* ==========================================================================
+   Tactical Info Callout
+   ========================================================================== */
+
+.tactical-callout {
+  background: linear-gradient(180deg, #121520 0%, #0d0f17 100%);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06),
+              0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.tactical-callout-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tactical-callout-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Toast Notification (Tactical Alert Pill)
+   ========================================================================== */
+
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: linear-gradient(180deg, #15221b 0%, #0c1410 100%);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  color: #6ee7b7;
+  padding: 12px 22px;
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+              0 12px 32px rgba(0, 0, 0, 0.7);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.toast.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}

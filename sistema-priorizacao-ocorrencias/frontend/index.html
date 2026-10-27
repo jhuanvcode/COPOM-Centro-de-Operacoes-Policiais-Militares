@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COPOM 190 | Sistema Tático de Priorização Policial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header: Tactical Command Bar -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon-wrapper">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3zm0 2.18l7 2.33v4.49c0 4.54-3.08 8.8-7 9.94-3.92-1.14-7-5.4-7-9.94V6.51l7-2.33zM11 7v2h2V7h-2zm0 4v6h2v-6h-2z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">
+            CENTRAL DE DESPACHO E TRIAGEM POLICIAL
+            <span class="brand-pill">COPOM 190</span>
+          </h1>
+          <p class="brand-subtitle">Centro de Operações Policiais Militares • Motor de Alta Performance </p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <label class="tactical-toggle" title="Ativar ou desativar sintetizador sonoro">
+          <input type="checkbox" id="toggle-audio" checked style="display: none;">
+          <div class="tactical-switch">
+            <div class="tactical-switch-thumb"></div>
+          </div>
+          <span>EFEITOS SONOROS</span>
+        </label>
+
+        <div class="status-indicator">
+          <div class="status-dot-pulse">
+            <div class="status-dot"></div>
+            <div class="status-dot-ring"></div>
+          </div>
+          <span>OPERACIONAL • MONITORANDO FILA</span>
+          <span id="loader-status" style="display:none; margin-left: 6px;">⏳</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- KPI Stats Cards (Machined Telemetry Slabs) -->
+    <div class="stats-grid">
+      <div class="tactile-slab stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Total de Ocorrências</span>
+          <span class="stat-micro-badge">SYS_QUEUE</span>
+        </div>
+        <div class="stat-body">
+          <div id="stat-total" class="stat-value">0</div>
+          <div class="stat-telemetry-led"></div>
+        </div>
+      </div>
+
+      <div class="tactile-slab stat-card danger">
+        <div class="stat-header">
+          <span class="stat-label">Ocorrências Críticas (Grau ≥ 8)</span>
+          <span class="stat-micro-badge" style="color: #fca5a5; border-color: rgba(239,68,68,0.3);">ALERT_CODE_RED</span>
+        </div>
+        <div class="stat-body">
+          <div id="stat-criticas" class="stat-value">0</div>
+          <div class="stat-telemetry-led"></div>
+        </div>
+      </div>
+
+      <div class="tactile-slab stat-card warning">
+        <div class="stat-header">
+          <span class="stat-label">Tempo Médio Estimado</span>
+          <span class="stat-micro-badge">AVG_ETA</span>
+        </div>
+        <div class="stat-body">
+          <div id="stat-tempo-medio" class="stat-value">0 min</div>
+          <div class="stat-telemetry-led"></div>
+        </div>
+      </div>
+
+      <div class="tactile-slab stat-card success">
+        <div class="stat-header">
+          <span class="stat-label">Viatura Mais Próxima</span>
+          <span class="stat-micro-badge" style="color: #6ee7b7; border-color: rgba(16,185,129,0.3);">CLOSEST_UNIT</span>
+        </div>
+        <div class="stat-body">
+          <div id="stat-distancia-min" class="stat-value">0.0 km</div>
+          <div class="stat-telemetry-led"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel de Controle Tático: Critérios e Algoritmos -->
+    <div class="tactile-slab controls-card">
+      <div class="controls-header-bar">
+        <div class="controls-section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          Critério de Priorização Tática (Triagem Operacional)
+        </div>
+        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);">HARDWARE_TOGGLE_DECK</span>
+      </div>
+
+      <!-- Cult UI: Tactile Toggle Deck -->
+      <div class="criterios-deck">
+        <button class="btn-criterio active" data-criterio="GRAVIDADE_DECRESCENTE">
+          <span> Gravidade Crítica (Urgência)</span>
+        </button>
+        <button class="btn-criterio" data-criterio="TEMPO_ATENDIMENTO_CRESCENTE">
+          <span>️ Menor Duração (Desafogar Fila)</span>
+        </button>
+        <button class="btn-criterio" data-criterio="DISTANCIA_CRESCENTE">
+          <span> Menor Distância (Resposta Rápida)</span>
+        </button>
+        <button class="btn-criterio" data-criterio="DATA_CRONOLOGICA">
+          <span> Ordem de Chamada (FIFO)</span>
+        </button>
+        <button class="btn-criterio btn-risco" data-criterio="SCORE_RISCO_TRIAGEM">
+          <span> Score de Risco Operacional</span>
+        </button>
+        <button class="btn-criterio" data-criterio="REGIAO_VOLUME">
+          <span> Batalhões Sobrecarregados</span>
+        </button>
+      </div>
+
+      <!-- Toolbar: Algoritmo & Execução -->
+      <div class="controls-toolbar">
+        <div class="tool-group">
+          <label class="tool-label">Algoritmo:</label>
+          <select id="select-algoritmo" class="select-styled">
+            <option value="QuickSort" selected>QuickSort (Mediana de 3)</option>
+            <option value="MergeSort">MergeSort (Divisão e Conquista)</option>
+            <option value="HeapSort">HeapSort (Binary Max-Heap)</option>
+            <option value="TimSort">Java TimSort (Arrays.sort)</option>
+            <option value="InsertionSort">InsertionSort (Quadrático Didático)</option>
+          </select>
+          <div id="badge-tempo-execucao" class="badge-timer">PRONTO</div>
+        </div>
+
+        <div class="tool-group">
+          <label class="tool-label">Volume:</label>
+          <input id="input-qtd" type="number" class="input-styled" value="2000" min="50" max="100000" step="500" style="width: 100px;">
+          
+          <!-- Cult UI Metal Buttons -->
+          <button id="btn-gerar" class="btn-metal btn-metal-steel">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            Gerar Carga
+          </button>
+
+          <button id="btn-benchmark" class="btn-metal btn-metal-titanium">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            ⚡ Rodar Benchmark Científico
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de Filtro e Busca -->
+      <div class="filter-bar">
+        <div style="position: relative; flex: 1; min-width: 260px;">
+          <input id="input-busca" type="text" class="input-styled" placeholder="Filtrar por código, crime ou região..." style="width: 100%; padding-left: 32px;">
+          <svg style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; stroke: #64748b;" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+
+        <select id="filtro-gravidade" class="select-styled" style="min-width: 220px;">
+          <option value="0">Todas as Gravidades</option>
+          <option value="8">🚨 Apenas Críticas (8 a 10)</option>
+          <option value="5">⚠️ Médias e Altas (5 a 10)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid Principal: Tabela de Despacho + Painel de Benchmark -->
+    <div class="main-grid">
+
+      <!-- Painel Esquerdo: Fila de Despacho Tático -->
+      <div class="tactile-slab panel-card">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            Fila de Prioridade Tática para Despacho
+          </h2>
+          <span id="info-fila" class="panel-meta">Carregando telemetria...</span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Ordem</th>
+                <th>Código ID</th>
+                <th>Ocorrência Policial</th>
+                <th>Gravidade</th>
+                <th>Horário</th>
+                <th>Tempo Est.</th>
+                <th>Distância</th>
+                <th>Batalhão</th>
+                <th>Score</th>
+                <th>Despacho</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-ocorrencias-body">
+              <!-- Preenchido dinamicamente com Cult UI Machined Badges & Metal Buttons -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Painel Direito: Telemetria Científica Big-O e Log de Despachos -->
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+
+        <!-- Gráfico e Benchmark Telemetry -->
+        <div class="tactile-slab panel-card">
+          <div class="panel-header">
+            <h2 class="panel-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              Desempenho dos Algoritmos
+            </h2>
+            <span class="panel-meta" style="color: #38bdf8;">BIG_O_ENGINE</span>
+          </div>
+
+          <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">
+            Comparação comparativa do tempo de ordenação entre algoritmos $O(N \log N)$ e $O(N^2)$ para os chamados da central.
+          </p>
+
+          <div class="chart-wrapper">
+            <canvas id="canvas-grafico"></canvas>
+          </div>
+
+          <div class="table-container" style="margin-top: 16px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Algoritmo</th>
+                  <th>Complexidade</th>
+                  <th>Tempo</th>
+                  <th>Vazão</th>
+                  <th>Fator</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-benchmark-body">
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-tertiary); padding: 20px; font-family: var(--font-mono); font-size: 11px;">
+                    Clique em <strong>⚡ Rodar Benchmark Científico</strong> para executar os algoritmos.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Log de Viaturas em Campo (Realtime Dispatch Stream) -->
+        <div class="tactile-slab panel-card">
+          <div class="panel-header">
+            <h3 class="panel-title" style="font-size: 13px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              Histórico de Despacho Recente
+            </h3>
+            <span style="font-family: var(--font-mono); font-size: 10px; color: #10b981; font-weight: 700;">LIVE_FEED</span>
+          </div>
+          <div id="lista-despachos" style="background: #090a0e; border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden;">
+            <!-- Preenchido via DispatchLog -->
+          </div>
+        </div>
+
+        <!-- Telemetria Educacional / Callout Tático -->
+        <div class="tactical-callout">
+          <div class="tactical-callout-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            Impacto no Tempo de Resposta Policial
+          </div>
+          <p class="tactical-callout-text">
+            Em ocorrências de alta gravidade (código 8 a 10), cada segundo poupado no despacho salva vidas. Algoritmos $O(N \log N)$ como o <strong>QuickSort</strong> e <strong>MergeSort</strong> processam 50.000 chamados em milissegundos, impedindo que a central congele sob sobrecarga.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div id="toast-notificacao" class="toast">Viatura despachada!</div>
+
+  <!-- Carrega a aplicação modular -->
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
